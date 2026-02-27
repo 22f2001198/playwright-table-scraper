@@ -1,0 +1,30 @@
+name: Scrape Table Sums
+
+on: [push]
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+    
+    - name: Install dependencies (QA Check by 22f2001198@ds.study.iitm.ac.in)
+      run: npm init -y && npm install @playwright/test
+    
+    - name: Install Playwright browsers
+      run: npx playwright install --with-deps
+    
+    - name: Run scraper
+      run: npx playwright test scrape.test.js
+    
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: test-results/
